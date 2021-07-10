@@ -1,0 +1,405 @@
+mutation CREATE_USER($username: String!, $email: String!, $password: String!) {
+	createUser(NewUser: { email: $email, username: $username, password: $password }) {
+		user {
+			id
+			email
+			username
+			updatedAt
+			createdAt
+			role
+		}
+		message
+		success
+		access_token
+	}
+}
+
+mutation LOGIN_USER($email: String!, $password: String!) {
+	loginUser(LoginUser: { email: $email, password: $password }) {
+		user {
+			id
+			email
+			username
+			updatedAt
+			createdAt
+			role
+		}
+		message
+		success
+		access_token
+	}
+}
+
+query AUTH_PROFILE {
+	auth_Profile {
+		username
+		id
+		email
+		updatedAt
+		createdAt
+		role
+	}
+}
+
+query ALL_USERS($page: Int, $limit: Int) {
+	get_all_users(page: $page, limit: $limit) {
+		docs {
+			username
+			id
+			email
+			updatedAt
+			createdAt
+		}
+		totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+	}
+}
+
+query ALL_CATEGORIES {
+	all_categories {
+		name
+		updatedAt
+		createdAt
+		img
+		id
+	}
+}
+
+mutation ADD_CATEGORY($name: String!, $img: String!) {
+	add_category(name: $name, img: $img) {
+		status
+		message
+	}
+}
+
+mutation UPDATE_CATEGORY($name: String!, $id: ID!, $img: String!) {
+	update_category(id: $id, name: $name, img: $img) {
+		message
+		status
+	}
+}
+
+mutation DELETE_CATEGORY($id: ID!) {
+	delete_category(id: $id) {
+		message
+		status
+	}
+}
+
+query GET_ALL_PRODUCTS($page: Int!, $limit: Int!) {
+	get_all_products(page: $page, limit: $limit) {
+		docs {
+			p_name
+			seller_id {
+				username
+				id
+				email
+			}
+			category_id {
+				name
+			}
+			price_info {
+				price
+				discount
+			}
+			product_info {
+				width
+				weight
+				height
+			}
+			p_img
+			updatedAt
+			createdAt
+		}
+		totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+	}
+}
+
+query GET_PRODUCT($id: ID!) {
+	get_product_by_id(id: $id) {
+		p_name
+		p_img
+		description
+		price_info {
+			price
+			discount
+		}
+		product_info {
+			width
+			height
+			weight
+		}
+		updatedAt
+		createdAt
+	}
+}
+
+mutation ADD_PRODUCT(
+	$p_name: String!
+	$p_img: String!
+	$price: Int!
+	$description: String!
+	$category_id: ID!
+	$seller_id: ID!
+	$discount: Int
+	$width: String
+	$height: String
+	$weight: String
+) {
+	add_product(
+		InputProduct: {
+			p_name: $p_name
+			p_img: $p_img
+			price: $price
+			description: $description
+			category_id: $category_id
+			seller_id: $seller_id
+			discount: $discount
+			width: $width
+			height: $height
+			weight: $weight
+		}
+	) {
+		message
+		status
+	}
+}
+
+
+query ALL_ORDERS($page:Int,$limit:Int){
+  all_orders(page:$page,limit:$limit){
+    docs{
+      id
+      product_info{
+        id
+        p_name
+        p_img
+        price_info{
+          price
+          discount
+        }
+        product_info{
+          width
+          weight
+          height
+        }
+      }
+      delivery_info{
+        id
+        username
+        email
+      }
+      buyer_info{
+        id
+        username
+        email
+  
+      }
+      seller_info{
+        id
+        username
+        email
+      }
+      status
+      updatedAt
+      createdAt
+    }
+    totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+    
+  }
+}
+
+mutation ADD_ORDER($status:String!,$product_info:[ID!],$seller_info:ID!,$buyer_info:ID!,$delivery_info:ID){
+  add_order(InputOrder:{status:$status,product_info:$product_info,seller_info:$seller_info,buyer_info:$buyer_info,delivery_info:$delivery_info}){
+    status
+    message
+  }
+}
+
+mutation UPDATE_ORDER($status:String!,$product_info:[ID!],$seller_info:ID!,$buyer_info:ID!,$delivery_info:ID,$order_id:ID!){
+  update_order(UpdateOrder:{status:$status,product_info:$product_info,seller_info:$seller_info,buyer_info:$buyer_info,delivery_info:$delivery_info,id:$order_id}){
+    status
+    message
+  }
+}
+
+query GETORDERSBYSELLER($seller_id:ID!,$limit:Int!,$page:Int!){
+  get_orders_by_seller(seller_id:$seller_id,page:$page,limit:$limit){
+     docs{
+      id
+      product_info{
+        id
+        p_name
+        p_img
+        price_info{
+          price
+          discount
+        }
+        product_info{
+          width
+          weight
+          height
+        }
+      }
+      delivery_info{
+        id
+        username
+        email
+      }
+      buyer_info{
+        id
+        username
+        email
+  
+      }
+      seller_info{
+        id
+        username
+        email
+      }
+      status
+      updatedAt
+      createdAt
+    }
+    totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+    
+  
+  }
+}
+
+query GETORDERSBYBUYER($buyer_id:ID!,$limit:Int!,$page:Int!){
+  get_orders_by_buyer(buyer_id:$buyer_id,page:$page,limit:$limit){
+     docs{
+      id
+      product_info{
+        id
+        p_name
+        p_img
+        price_info{
+          price
+          discount
+        }
+        product_info{
+          width
+          weight
+          height
+        }
+      }
+      delivery_info{
+        id
+        username
+        email
+      }
+      buyer_info{
+        id
+        username
+        email
+  
+      }
+      seller_info{
+        id
+        username
+        email
+      }
+      status
+      updatedAt
+      createdAt
+    }
+    totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+    
+  
+  }
+}
+
+query ASSIGNEDORDERS($delivery_id:ID!,$limit:Int!,$page:Int!){
+  assigned_orders(delivery_id:$delivery_id,page:$page,limit:$limit){
+     docs{
+      id
+      product_info{
+        id
+        p_name
+        p_img
+        price_info{
+          price
+          discount
+        }
+        product_info{
+          width
+          weight
+          height
+        }
+      }
+      delivery_info{
+        id
+        username
+        email
+      }
+      buyer_info{
+        id
+        username
+        email
+  
+      }
+      seller_info{
+        id
+        username
+        email
+      }
+      status
+      updatedAt
+      createdAt
+    }
+    totalDocs
+		totalPages
+		nextPage
+		prevPage
+		hasPrevPage
+		hasNextPage
+		page
+		limit
+		pagingCounter
+    
+  
+  }
+}
+
+
